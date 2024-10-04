@@ -51,6 +51,10 @@ void OnScroll(GLFWwindow* window, double xoffset, double yoffset) {
     ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
 }
 
+// timing 
+float deltaTime = 0.0f; // time between current frame and last frame
+float lastFrame = 0.0f; // time of last frame
+
 int main(int argc, const char** argv) {
     SPDLOG_INFO("Start program");
     if (!glfwInit()) {
@@ -110,7 +114,19 @@ int main(int argc, const char** argv) {
 
     // glfw 루프 실행, 윈도우 close 버튼을 누르면 정상 종료
     SPDLOG_INFO("Start main loop");
+    GLint fCounter = 0;
     while (!glfwWindowShouldClose(window)) {
+        // Set frame time
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+		if(fCounter > 500) {
+            SPDLOG_INFO("FPS: {}", 1 / deltaTime);
+			fCounter = 0;
+		} else {
+			fCounter++;
+		}
+
         glfwPollEvents();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
